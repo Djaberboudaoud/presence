@@ -337,7 +337,7 @@ def list_students(
 
     where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
     sql = f"""
-        SELECT ID, 
+        SELECT ID AS "ID", 
                MAX(IANNEXE) AS "IANNEXE", MAX(IANNEEINS) AS "IANNEEINS", MAX(INSEQ) AS "INSEQ", 
                MAX(ORDREC) AS "ORDREC", MAX(ICODE) AS "ICODE", MAX(NIVEAU) AS "NIVEAU", 
                MAX(FILIERE) AS "FILIERE", 
