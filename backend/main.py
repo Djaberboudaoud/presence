@@ -483,7 +483,7 @@ def stats(current_user: dict = Depends(get_current_user)):
             completion_rate = round((marked_rows / total_rows * 100)) if total_rows > 0 else 0
 
             cur.execute(
-                "SELECT ss.NCENTRE, MAX(COALESCE(u.NOMCENTRE, ss.NCENTRE)) AS NOMCENTRE, "
+                "SELECT ss.NCENTRE AS \"NCENTRE\", MAX(COALESCE(u.NOMCENTRE, ss.NCENTRE)) AS \"NOMCENTRE\", "
                 "COUNT(DISTINCT ss.ID) AS student_count, "
                 "COUNT(*) AS total_rows, "
                 "COUNT(CASE WHEN ss.status != 'unmarked' THEN 1 END) AS marked_rows, "
@@ -495,7 +495,7 @@ def stats(current_user: dict = Depends(get_current_user)):
             )
             by_school = cur.fetchall()
             cur.execute(
-                "SELECT NIVEAU, FILIERE, COUNT(DISTINCT ID) AS cnt, "
+                "SELECT NIVEAU AS \"NIVEAU\", FILIERE AS \"FILIERE\", COUNT(DISTINCT ID) AS cnt, "
                 "COUNT(DISTINCT CASE WHEN status = 'حاضر' THEN ID END) AS present_count, "
                 "COUNT(DISTINCT CASE WHEN status = 'غائب' THEN ID END) AS absent_count "
                 "FROM school_students GROUP BY NIVEAU, FILIERE ORDER BY NIVEAU, cnt DESC"
@@ -516,17 +516,17 @@ def stats(current_user: dict = Depends(get_current_user)):
             )
             students = cur.fetchone()["total_students"]
             cur.execute(
-                "SELECT NIVEAU, COUNT(DISTINCT ID) AS cnt FROM school_students WHERE NCENTRE = %s GROUP BY NIVEAU ORDER BY cnt DESC",
+                "SELECT NIVEAU AS \"NIVEAU\", COUNT(DISTINCT ID) AS cnt FROM school_students WHERE NCENTRE = %s GROUP BY NIVEAU ORDER BY cnt DESC",
                 (ncentre,),
             )
             by_level = cur.fetchall()
             cur.execute(
-                "SELECT FILIERE, COUNT(DISTINCT ID) AS cnt FROM school_students WHERE NCENTRE = %s GROUP BY FILIERE ORDER BY cnt DESC",
+                "SELECT FILIERE AS \"FILIERE\", COUNT(DISTINCT ID) AS cnt FROM school_students WHERE NCENTRE = %s GROUP BY FILIERE ORDER BY cnt DESC",
                 (ncentre,),
             )
             by_filiere = cur.fetchall()
             cur.execute(
-                "SELECT NSALLE, COUNT(DISTINCT ID) AS cnt FROM school_students WHERE NCENTRE = %s AND NSALLE IS NOT NULL GROUP BY NSALLE ORDER BY NSALLE",
+                "SELECT NSALLE AS \"NSALLE\", COUNT(DISTINCT ID) AS cnt FROM school_students WHERE NCENTRE = %s AND NSALLE IS NOT NULL GROUP BY NSALLE ORDER BY NSALLE",
                 (ncentre,),
             )
             by_salle = cur.fetchall()
