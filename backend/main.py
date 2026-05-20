@@ -338,12 +338,12 @@ def list_students(
     where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
     sql = f"""
         SELECT ID, 
-               MAX(IANNEXE) AS IANNEXE, MAX(IANNEEINS) AS IANNEEINS, MAX(INSEQ) AS INSEQ, 
-               MAX(ORDREC) AS ORDREC, MAX(ICODE) AS ICODE, MAX(NIVEAU) AS NIVEAU, 
-               MAX(FILIERE) AS FILIERE, 
-               GROUP_CONCAT(DISTINCT MATIERE SEPARATOR ' - ') AS MATIERE, 
-               MAX(NOM) AS NOM, MAX(PRENOM) AS PRENOM, MAX(WILAYA) AS WILAYA, 
-               MAX(NSALLE) AS NSALLE, MAX(NCENTRE) AS NCENTRE, MAX(status) AS status, MAX(created_at) AS created_at
+               MAX(IANNEXE) AS "IANNEXE", MAX(IANNEEINS) AS "IANNEEINS", MAX(INSEQ) AS "INSEQ", 
+               MAX(ORDREC) AS "ORDREC", MAX(ICODE) AS "ICODE", MAX(NIVEAU) AS "NIVEAU", 
+               MAX(FILIERE) AS "FILIERE", 
+               STRING_AGG(DISTINCT MATIERE, ' - ') AS "MATIERE", 
+               MAX(NOM) AS "NOM", MAX(PRENOM) AS "PRENOM", MAX(WILAYA) AS "WILAYA", 
+               MAX(NSALLE) AS "NSALLE", MAX(NCENTRE) AS "NCENTRE", MAX(status) AS status, MAX(created_at) AS created_at
         FROM school_students
         {where}
         GROUP BY ID
@@ -554,7 +554,7 @@ def list_levels(filiere: Optional[str] = None, matiere: Optional[str] = None, cu
         conditions.append("NIVEAU IS NOT NULL")
         
         where = "WHERE " + " AND ".join(conditions)
-        cur.execute(f"SELECT DISTINCT NIVEAU FROM school_students {where} ORDER BY NIVEAU", params)
+        cur.execute(f"SELECT DISTINCT NIVEAU AS \"NIVEAU\" FROM school_students {where} ORDER BY NIVEAU", params)
         rows = cur.fetchall()
     return [r["NIVEAU"] for r in rows]
 
@@ -572,7 +572,7 @@ def list_filieres(niveau: Optional[str] = None, matiere: Optional[str] = None, c
         conditions.append("FILIERE IS NOT NULL")
         
         where = "WHERE " + " AND ".join(conditions)
-        cur.execute(f"SELECT DISTINCT FILIERE FROM school_students {where} ORDER BY FILIERE", params)
+        cur.execute(f"SELECT DISTINCT FILIERE AS \"FILIERE\" FROM school_students {where} ORDER BY FILIERE", params)
         rows = cur.fetchall()
     return [r["FILIERE"] for r in rows]
 
@@ -588,7 +588,7 @@ def list_matieres(niveau: Optional[str] = None, filiere: Optional[str] = None, c
             conditions.append("FILIERE = %s"); params.append(filiere)
         conditions.append("MATIERE IS NOT NULL")
         where = "WHERE " + " AND ".join(conditions)
-        cur.execute(f"SELECT DISTINCT MATIERE FROM school_students {where} ORDER BY MATIERE", params)
+        cur.execute(f"SELECT DISTINCT MATIERE AS \"MATIERE\" FROM school_students {where} ORDER BY MATIERE", params)
         rows = cur.fetchall()
     return [r["MATIERE"] for r in rows]
 
@@ -619,7 +619,7 @@ def export_excel(
     where = "WHERE " + " AND ".join(conditions) if conditions else ""
     
     query = f"""
-        SELECT ID, NIVEAU, FILIERE, MATIERE, NOM, PRENOM, WILAYA, NSALLE, NCENTRE, status 
+        SELECT ID AS "ID", NIVEAU AS "NIVEAU", FILIERE AS "FILIERE", MATIERE AS "MATIERE", NOM AS "NOM", PRENOM AS "PRENOM", WILAYA AS "WILAYA", NSALLE AS "NSALLE", NCENTRE AS "NCENTRE", status 
         FROM school_students
         {where}
         ORDER BY NOM, PRENOM
