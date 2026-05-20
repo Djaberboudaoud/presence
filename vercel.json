@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd 7odor && npm install --include=dev && npm run build",
+  "outputDirectory": "7odor/dist/client",
+  "env": {
+    "VITE_API_URL": "https://precenceback.vercel.app"
+  }
+}
