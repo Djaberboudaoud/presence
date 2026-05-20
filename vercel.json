@@ -3,5 +3,10 @@
   "outputDirectory": "7odor/dist/client",
   "env": {
     "VITE_API_URL": "https://precenceback.vercel.app"
+  },
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://precenceback.vercel.app"
+    }
   }
 }
